@@ -29,6 +29,36 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/*
+ * Copy string src to buffer dst of size dsize.  At most dsize-1
+ * chars will be copied.  Always NUL terminates (unless dsize == 0).
+ * Returns strlen(src); if retval >= dsize, truncation occurred.
+ */
+static size_t
+_strlcpy_(char *dst, const char *src, size_t dsize)
+{
+    const char *osrc = src;
+    size_t nleft = dsize;
+
+    /* Copy as many bytes as will fit. */
+    if (nleft != 0) {
+        while (--nleft != 0) {
+            if ((*dst++ = *src++) == '\0')
+                break;
+        }
+    }
+
+    /* Not enough room in dst, add NUL and traverse rest of src. */
+    if (nleft == 0) {
+        if (dsize != 0)
+            *dst = '\0';        /* NUL-terminate dst */
+        while (*src++)
+            ;
+    }
+
+    return(src - osrc - 1); /* count does not include NUL */
+}
+
 #define downcase(c) (nocase && isupper(c) ? tolower(c) : (c))
 #define compare(c1, c2) (((unsigned char)(c1)) - ((unsigned char)(c2)))
 #define Next(p) ((p) + 1)
@@ -113,7 +143,7 @@ mrb_file_fnmatch_ext(const char* str, const char* path, int flags)
                 Inc(p);
             }
             memcpy(buf+shift, t, p-t);
-            strlcpy(buf+shift+(p-t), rbrace+1, len-(shift+(p-t)));
+            _strlcpy_(buf+shift+(p-t), rbrace+1, len-(shift+(p-t)));
             status = mrb_file_fnmatch(buf, path, flags) == 0;
             if (status) break;
         }
