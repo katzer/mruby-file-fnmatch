@@ -82,12 +82,12 @@ assert 'File::fnmatch' do
   assert_true  File.fnmatch('**.rb',   'lib/song.rb')
   assert_true  File.fnmatch('*',       'dave/.profile')
 
-  assert_false File.fnmatch('*/*', 'dave/.profile', File::FNM_PATHNAME)
-  # assert_true  File.fnmatch('*/*', 'dave/.profile', File::FNM_PATHNAME | File::FNM_DOTMATCH) # TODO
+  assert_false File.fnmatch('*/*', 'dave/.profile',   File::FNM_PATHNAME)
+  assert_true  File.fnmatch('*/*', 'dave/.profile',   File::FNM_PATHNAME | File::FNM_DOTMATCH)
 
-  assert_true  File.fnmatch('**/foo', 'a/b/c/foo', File::FNM_PATHNAME)
-  assert_true  File.fnmatch('**/foo', '/a/b/c/foo', File::FNM_PATHNAME)
+  assert_true  File.fnmatch('**/foo', 'a/b/c/foo',    File::FNM_PATHNAME)
+  assert_true  File.fnmatch('**/foo', '/a/b/c/foo',   File::FNM_PATHNAME)
   assert_true  File.fnmatch('**/foo', 'c:/a/b/c/foo', File::FNM_PATHNAME)
-  # assert_false File.fnmatch('**/foo', 'a/.b/c/foo', File::FNM_PATHNAME) # TODO
-  assert_true  File.fnmatch('**/foo', 'a/.b/c/foo', File::FNM_PATHNAME | File::FNM_DOTMATCH)
+  assert_false File.fnmatch('**/foo', 'a/.b/c/foo',   File::FNM_PATHNAME)
+  assert_true  File.fnmatch('**/foo', 'a/.b/c/foo',   File::FNM_PATHNAME | File::FNM_DOTMATCH)
 end

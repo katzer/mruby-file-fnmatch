@@ -246,7 +246,7 @@ mrb_file_fnmatch(const char* p, const char* s, int flags)
                 ptmp = p;
                 stmp = s;
             }
-            if (fnmatch_helper(&p, &s, flags)) {
+            if (fnmatch_helper(&p, &s, flags) == 0) {
                 while (*s && *s != '/') Inc(s);
                 if (*p && *s) {
                     p++;
