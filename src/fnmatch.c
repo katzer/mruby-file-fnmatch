@@ -68,31 +68,31 @@ _strlcpy_(char *dst, const char *src, size_t dsize)
 static char *
 bracket(const char* p, const char* s, int flags)
 {
-    const int nocase = flags & MRB_FNM_CASEFOLD;
+    const int nocase =   flags & MRB_FNM_CASEFOLD;
     const int escape = !(flags & MRB_FNM_NOESCAPE);
 
     int ok = 0, nope = 0;
 
-    if(*p == '!' || *p == '^') {
+    if (*p == '!' || *p == '^') {
         nope = 1;
         p++;
     }
 
-    while(*p != ']') {
+    while (*p != ']') {
         const char *t1 = p;
-        if(escape && *t1 == '\\') t1++;
-        if(!*t1) return NULL;
+        if (escape && *t1 == '\\') t1++;
+        if (!*t1) return NULL;
 
         p = Next(t1);
-        if(p[0] == '-' && p[1] != ']') {
+        if (p[0] == '-' && p[1] != ']') {
             const char *t2 = p + 1;
-            if(escape && *t2 == '\\') t2++;
-            if(!*t2) return NULL;
+            if (escape && *t2 == '\\') t2++;
+            if (!*t2) return NULL;
 
             p = Next(t2);
-            if(!ok && Compare(t1, s) <= 0 && Compare(s, t2) <= 0) ok = 1;
+            if (!ok && Compare(t1, s) <= 0 && Compare(s, t2) <= 0) ok = 1;
         } else {
-            if(!ok && Compare(t1, s) == 0) ok = 1;
+            if (!ok && Compare(t1, s) == 0) ok = 1;
         }
     }
 
@@ -100,13 +100,12 @@ bracket(const char* p, const char* s, int flags)
 }
 
 int
-mrb_file_fnmatch_ext(const char* str, const char* path, int flags)
+mrb_file_fnmatch_ext(const char* p, const char* path, int flags)
 {
-    const int escape = !(flags & MRB_FNM_NOESCAPE);
-    const char *p = str;
-    const char *s = p;
+    const int escape   = !(flags & MRB_FNM_NOESCAPE);
+    const char *s      = p;
     const char *lbrace = 0, *rbrace = 0;
-    int nest = 0, status = 0;
+    int nest           = 0, status = 0;
 
     while (*p) {
         if (*p == '{' && nest++ == 0) {
@@ -164,10 +163,10 @@ mrb_file_fnmatch_ext(const char* str, const char* path, int flags)
 static int
 fnmatch_helper(const char** pcur, const char** scur, int flags)
 {
-    const int period = !(flags & MRB_FNM_DOTMATCH);
-    const int pathname = flags & MRB_FNM_PATHNAME;
-    const int escape = !(flags & MRB_FNM_NOESCAPE);
-    const int nocase = flags & MRB_FNM_CASEFOLD;
+    const int period   = !(flags & MRB_FNM_DOTMATCH);
+    const int pathname =   flags & MRB_FNM_PATHNAME;
+    const int escape   = !(flags & MRB_FNM_NOESCAPE);
+    const int nocase   =   flags & MRB_FNM_CASEFOLD;
 
     const char *ptmp = 0;
     const char *stmp = 0;
@@ -175,46 +174,46 @@ fnmatch_helper(const char** pcur, const char** scur, int flags)
     const char *p = *pcur;
     const char *s = *scur;
 
-    if(period && *s == '.' && *UNESCAPE(p) != '.') /* leading period */
+    if (period && *s == '.' && *UNESCAPE(p) != '.') /* leading period */
         RETURN(MRB_FNM_NOMATCH);
 
-    while(1) {
-        switch(*p) {
-        case '*':
-            do { p++; } while (*p == '*');
-            if(ISEND(UNESCAPE(p))) {
-                p = UNESCAPE(p);
-                RETURN(0);
-            }
-            if(ISEND(s)) RETURN(MRB_FNM_NOMATCH);
+    while (1) {
+        switch (*p) {
+            case '*':
+                do { p++; } while (*p == '*');
+                if (ISEND(UNESCAPE(p))) {
+                    p = UNESCAPE(p);
+                    RETURN(0);
+                }
+                if (ISEND(s)) RETURN(MRB_FNM_NOMATCH);
 
-            ptmp = p;
-            stmp = s;
-            continue;
+                ptmp = p;
+                stmp = s;
+                continue;
 
-        case '?':
-            if(ISEND(s)) RETURN(MRB_FNM_NOMATCH);
-            p++;
-            Inc(s);
-            continue;
-
-        case '[': {
-            const char *t;
-            if(ISEND(s)) RETURN(MRB_FNM_NOMATCH);
-            if((t = bracket(p + 1, s, flags)) != 0) {
-                p = t;
+            case '?':
+                if (ISEND(s)) RETURN(MRB_FNM_NOMATCH);
+                p++;
                 Inc(s);
                 continue;
+
+            case '[': {
+                const char *t;
+                if (ISEND(s)) RETURN(MRB_FNM_NOMATCH);
+                if ((t = bracket(p + 1, s, flags)) != 0) {
+                    p = t;
+                    Inc(s);
+                    continue;
+                }
+                goto failed;
             }
-            goto failed;
-        }
         }
 
         /* ordinary */
         p = UNESCAPE(p);
-        if(ISEND(s)) RETURN(ISEND(p) ? 0 : MRB_FNM_NOMATCH);
-        if(ISEND(p)) goto failed;
-        if(Compare(p, s) != 0) goto failed;
+        if (ISEND(s)) RETURN(ISEND(p) ? 0 : MRB_FNM_NOMATCH);
+        if (ISEND(p)) goto failed;
+        if (Compare(p, s) != 0) goto failed;
 
         Inc(p);
         Inc(s);
@@ -234,33 +233,33 @@ fnmatch_helper(const char** pcur, const char** scur, int flags)
 int
 mrb_file_fnmatch(const char* p, const char* s, int flags)
 {
-    const int period = !(flags & MRB_FNM_DOTMATCH);
-    const int pathname = flags & MRB_FNM_PATHNAME;
+    const int period   = !(flags & MRB_FNM_DOTMATCH);
+    const int pathname =   flags & MRB_FNM_PATHNAME;
 
     const char *ptmp = 0;
     const char *stmp = 0;
 
-    if(pathname) {
-        while(1) {
-            if(p[0] == '*' && p[1] == '*' && p[2] == '/') {
+    if (pathname) {
+        while (1) {
+            if (p[0] == '*' && p[1] == '*' && p[2] == '/') {
                 do { p += 3; } while (p[0] == '*' && p[1] == '*' && p[2] == '/');
                 ptmp = p;
                 stmp = s;
             }
-            if(fnmatch_helper(&p, &s, flags)) {
-                while(*s && *s != '/') Inc(s);
-                if(*p && *s) {
+            if (fnmatch_helper(&p, &s, flags)) {
+                while (*s && *s != '/') Inc(s);
+                if (*p && *s) {
                     p++;
                     s++;
                     continue;
                 }
-                if(!*p && !*s)
+                if (!*p && !*s)
                     return 0;
             }
             /* failed : try next recursion */
-            if(ptmp && stmp && !(period && *stmp == '.')) {
-                while(*stmp && *stmp != '/') Inc(stmp);
-                if(*stmp) {
+            if (ptmp && stmp && !(period && *stmp == '.')) {
+                while (*stmp && *stmp != '/') Inc(stmp);
+                if (*stmp) {
                     p = ptmp;
                     stmp++;
                     s = stmp;
