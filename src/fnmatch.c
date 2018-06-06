@@ -100,7 +100,7 @@ bracket(const char* p, const char* s, int flags)
 }
 
 int
-mrb_file_fnmatch_ext(const char* p, const char* path, int flags)
+mrb_file_fnmatch_ex(const char* p, const char* path, int flags)
 {
     const int escape   = !(flags & MRB_FNM_NOESCAPE);
     const char *s      = p;
@@ -283,7 +283,7 @@ mrb_f_fnmatch(mrb_state *mrb, mrb_value klass)
     mrb_get_args(mrb, "zz|i", &pattern, &path, &flags);
 
     if (flags & MRB_FNM_EXTGLOB) {
-        res = mrb_file_fnmatch_ext(pattern, path, flags) > 0;
+        res = mrb_file_fnmatch_ex(pattern, path, flags) > 0;
     } else {
         res = mrb_file_fnmatch(pattern, path, flags) == 0;
     }

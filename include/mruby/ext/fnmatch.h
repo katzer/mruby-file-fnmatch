@@ -36,7 +36,7 @@ extern "C" {
 #define MRB_FNM_NOMATCH  1
 
 int mrb_file_fnmatch(const char* pattern, const char* path, int flags);
-int mrb_file_fnmatch_ext(const char* pattern, const char* path, int flags);
+int mrb_file_fnmatch_ex(const char* pattern, const char* path, int flags);
 
 #ifdef __cplusplus
 }
