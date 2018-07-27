@@ -24,9 +24,9 @@
 #ifndef MRUBY_FNMATCH_H
 #define MRUBY_FNMATCH_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <mruby.h>
+
+MRB_BEGIN_DECL
 
 #define MRB_FNM_NOESCAPE 0x01
 #define MRB_FNM_PATHNAME 0x02
@@ -35,10 +35,9 @@ extern "C" {
 #define MRB_FNM_EXTGLOB  0x10
 #define MRB_FNM_NOMATCH  1
 
-int mrb_file_fnmatch(const char* pattern, const char* path, int flags);
-int mrb_file_fnmatch_ex(const char* pattern, const char* path, int flags);
+MRB_API int mrb_file_fnmatch(const char* pattern, const char* path, int flags);
+MRB_API int mrb_file_fnmatch_ex(const char* pattern, const char* path, int flags);
 
-#ifdef __cplusplus
-}
-#endif
+MRB_END_DECL
+
 #endif
