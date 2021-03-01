@@ -1,4 +1,4 @@
-# mruby-file-fnmatch [![Build Status](https://travis-ci.com/appPlant/mruby-file-fnmatch.svg?branch=master)](https://travis-ci.com/appPlant/mruby-file-fnmatch) [![Build status](https://ci.appveyor.com/api/projects/status/8ek1sfuw1jw4igpb/branch/master?svg=true)](https://ci.appveyor.com/project/katzer/mruby-file-fnmatch/branch/master)
+# mruby-file-fnmatch <br> [![Build Status](https://travis-ci.com/appPlant/mruby-file-fnmatch.svg?branch=master)](https://travis-ci.com/appPlant/mruby-file-fnmatch) [![Build status](https://ci.appveyor.com/api/projects/status/8ek1sfuw1jw4igpb/branch/master?svg=true)](https://ci.appveyor.com/project/katzer/mruby-file-fnmatch/branch/master)
 
 Path matching against patterns for [mruby][mruby] similar to shell filename globbing.
 
